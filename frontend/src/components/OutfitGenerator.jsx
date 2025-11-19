@@ -24,7 +24,7 @@ const OutfitGenerator = () => {
   const [wowFactor, setWowFactor] = useState(5);
   const [brands, setBrands] = useState('');
   const [budget, setBudget] = useState('');
-  const [currency, setCurrency] = useState('USD');
+  const [currency, setCurrency] = useState('SGD');
   const [occasion, setOccasion] = useState('');
   const [customOccasion, setCustomOccasion] = useState('');
   const [conditions, setConditions] = useState('');

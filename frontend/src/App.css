@@ -757,6 +757,21 @@ body {
   color: var(--error-color);
 }
 
+.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  user-select: none;
+}
+
+.clickable:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.clickable:active {
+  transform: scale(0.95);
+}
+
 /* Sort Controls */
 .sort-controls {
   display: flex;

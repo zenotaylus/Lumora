@@ -8,7 +8,6 @@ const FashionArena = () => {
   const [sortBy, setSortBy] = useState('recent');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [likedSubmissions, setLikedSubmissions] = useState(new Set());
 
   useEffect(() => {
     loadData();
@@ -39,19 +38,16 @@ const FashionArena = () => {
     }
   };
 
-  const handleDoubleClick = async (submissionId) => {
-    // Prevent multiple likes
-    if (likedSubmissions.has(submissionId)) {
-      return;
+  const handleLike = async (submissionId, event) => {
+    // Stop event propagation if called from a click event
+    if (event) {
+      event.stopPropagation();
     }
 
     try {
       const response = await likeSubmission(submissionId);
 
       if (response.success) {
-        // Update local state
-        setLikedSubmissions(new Set([...likedSubmissions, submissionId]));
-
         // Update submission in list
         setSubmissions((prev) =>
           prev.map((sub) =>
@@ -66,7 +62,7 @@ const FashionArena = () => {
           )
         );
 
-        // Show animation (you can add CSS animation here)
+        // Show animation
         const element = document.getElementById(`submission-${submissionId}`);
         if (element) {
           element.classList.add('liked-animation');
@@ -78,6 +74,10 @@ const FashionArena = () => {
     } catch (err) {
       console.error('Error liking submission:', err);
     }
+  };
+
+  const handleDoubleClick = (submissionId) => {
+    handleLike(submissionId);
   };
 
   const getMedalEmoji = (rank) => {
@@ -129,7 +129,11 @@ const FashionArena = () => {
                 <h4>{entry.title}</h4>
                 <p className="leaderboard-occasion">{entry.occasion}</p>
               </div>
-              <div className="leaderboard-likes">
+              <div 
+                className="leaderboard-likes clickable"
+                onClick={(e) => handleLike(entry.id, e)}
+                title="Click to like"
+              >
                 ❤️ {entry.likes || 0}
               </div>
             </div>
@@ -186,8 +190,12 @@ const FashionArena = () => {
 
                 <div className="submission-meta">
                   <span className="occasion-tag">{submission.occasion}</span>
-                  <span className="likes-count">
-                    {submission.likes === 1 ? '1 like' : `${submission.likes || 0} likes`}
+                  <span 
+                    className="likes-count clickable"
+                    onClick={(e) => handleLike(submission.id, e)}
+                    title="Click to like"
+                  >
+                    ❤️ {submission.likes === 1 ? '1 like' : `${submission.likes || 0} likes`}
                   </span>
                 </div>
               </div>
